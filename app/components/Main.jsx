@@ -1,11 +1,18 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaMapPin } from "react-icons/fa6";
 import { IoMdRemoveCircle } from "react-icons/io";
 
 function Main() {
   const [task, setTask]= useState('')
   const [todo, setTodo]= useState([])
+  useEffect(()=>{
+    const storedTodo= localStorage.getItem("todo")
+    if(storedTodo) setTodo(JSON.parse(storedTodo))
+  },[])
+useEffect(()=>{
+  localStorage.setItem("todo",JSON.stringify(todo))
+},[todo])
 
   const addTask=()=>{
     if (task.trim() === '') return;
@@ -29,7 +36,7 @@ function Main() {
       <div className='text-3xl pt-4 bg-amber-400 h-full'>
       <h1 className='font-bold text-3xl'>Todo List</h1>
       <div className='p-5'>
-        <input className='border-b-2 focus:border-blue-300' type='text' value={task} onChange={(e)=>{setTask(e.target.value)}} placeholder='Enter your task' />
+        <input onKeyDown={(e)=>{e.key == 'Enter' && addTask()}} className='border-b-2 focus:border-blue-300' type='text' value={task} onChange={(e)=>{setTask(e.target.value)}} placeholder='Enter your task' />
         <button onClick={addTask} className='cursor-pointer rounded-3xl bg-black text-white px-4'>Add</button>
         
       </div>
